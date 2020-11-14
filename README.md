@@ -10,6 +10,8 @@ Team `KAIMARU` of [KAIST](https://kaist.ac.kr) is consisted of:
 * Jongseo Lee - [Codeforces](http://codeforces.com/profile/leejseo)
 * Chaejun Lee - [Codeforces](http://codeforces.com/profile/juney)
 
+Actually, `KAIMARU` is the name of the school cafeteria of KAIST.
+
 We have participated in 2020 ICPC Seoul Regional Contest and took the 10th place.
 
 ## References
