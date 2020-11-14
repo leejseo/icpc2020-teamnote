@@ -1,0 +1,106 @@
+\subsection{Basic Number Theory} %ntopia
+\inputminted{cpp}{src/Math/basic.cpp}
+
+\subsection{Primality Test - Miller-Rabin} %ntopia
+\inputminted{cpp}{src/Math/primality.cpp}
+
+\subsection{Rational Number} %ntopia
+\inputminted{cpp}{src/Math/rational.cpp}
+
+\subsection{Pollard-Rho} %ntopia
+\inputminted{cpp}{src/Math/pollard-rho.cpp}
+
+\subsection{Chinese Remainder Theorem} %ntopia
+\inputminted{cpp}{src/Math/crt.cpp}
+
+%\subsection{Count Point Under the Line and Axes} % koosaga
+%\inputminted{cpp}{src/Math/points-line.cpp}
+
+%\subsection{Gaussian Elimination (real number)} %ntopia
+%\inputminted{cpp}{src/Math/gaussian.cpp}
+
+\subsection{Gaussian Elimination} %koosaga
+\inputminted{cpp}{src/Math/gaussian-int.cpp}
+
+\subsection{Linear Algebra} %koosaga
+\inputminted{cpp}{src/Math/matrix.cpp}
+
+
+\subsection{Score Theorem}
+
+$D = (d_1, d_2, \cdots, d_n)$, $d_{i-1} \le d_i$가 그래프의 degree sequence가 될 수 있음은 $D' = (d_1', \cdots, d_{n-1}')$, $d_i' = \begin{cases} d_i & i < n-d_n \\ d_i-1 & i \ge n - d_n \end{cases}$
+이 그래프의 degree sequence가 될 수 있음과 동치이다.
+
+\subsection{Derangement}
+$D_n$을 $[n] \to [n]$ 상의 순열 중 고정점이 없는 것의 갯수라고 하자.
+다음의 식이 성립한다.
+\begin{itemize}
+    \item $D_n = (n-1)(D_{n-1}+D_{n-2}), \quad D_0 = 1,\, D_1 = 0.$
+    \item $D_n = n! \sum_{k=0}^{n} \frac{(-1)^k}{k!}$
+\end{itemize}
+
+\subsection{Catalan Number}
+\begin{itemize}
+    \item $C_n = \frac{1}{n+1} {2n \choose n}$
+    \item $C_n = \sum_{i=0}^{n-1} C_i C_{n-1-i}$
+\end{itemize}
+
+\subsection{Burnside's Lemma}
+Let $X$ be a finite set and $G$ be a permutation group over $X$.
+Define followings:
+\begin{itemize}
+    \item $G(X) := \{ \sigma(x) : \sigma \in G \}$ for each $x \in X$
+    \item $X_\sigma := \{x \in X : \sigma(x) = x\}$ for each $\sigma \in G$
+    \item $X/G := \{G(x) : x \in X \}$
+\end{itemize}
+Following holds.
+$$ |X / G| = \frac{1}{|G|} \sum_{\sigma} |X_\sigma|. $$
+\iffalse
+\subsection{Laplace Matrix}
+\begin{itemize}
+    \item $q_{ii} = \deg (i)$
+    \item $q_{ij} = \begin{cases} -1 & (i,j) \in E \\ 0 & \text{otherwise}\end{cases}$
+\end{itemize}
+
+$T(G) = |\det Q_{ij}|$.
+
+\subsection{Berlekamp-Massey Algorithm}
+\begin{itemize}
+    \item \framebox{\texttt{berlekamp\_massey}} 함수. $n$개의 DP 결괏값이 주어졌을 때, Berlekamp-Massey 알고리즘을 사용하여 해당 DP의 점화식을 찾아주는 루틴. $O(n^2)$ 시간 복잡도에 작동한다 (정확히는, 답이 되는 점화식의 크기가 $k$ 일 때 $O(nk+n\log mod))$
+    \item \framebox{\tt get\_nth} 함수. 주어진 DP 점화식을 사용하여 $n$번째 항을 구하는 루틴.
+\end{itemize}
+\inputminted{cpp}{src/Math/berlekamp.cpp}
+\fi
+
+%\subsection{Linear Sieve}
+%\inputminted{cpp}{src/Math/linear-sieve.cpp} %ahgus89
+%\begin{itemize}
+%    \item $\tau(n)$: $n$의 양의 약수의 개수
+%    \item $\sigma(n)$: $n$의 양의 약수의 합
+%    \item $\phi(n)$: $n$ 이하의 $n$과 서로소인 수 개수
+%    \item $\mu(n)$: $n$의 지수 2이상인 소인수가 있으면 0, 아니면 $(-1)^{\text{number of prime divisors}}$
+%\end{itemize}
+
+\subsection{Fast Fourier Transform}
+\inputminted{cpp}{src/Math/fft.cpp} %myungwoo
+
+\subsection{Number Theoretic Transform}
+\inputminted{cpp}{src/Math/ntt.cpp} %cubelover
+
+\subsection{Simplex Method}
+\inputminted{cpp}{src/Math/simplex.cpp}
+
+\subsection{Special Primes}
+\begin{itemize}
+\item $n \leq 1,000,000$ 약수 최대 240개 (720,720)
+\item $n \leq 1,000,000,000$ 최대 1,344개 (735,134,400)
+\item up to 10,000: 소수 1,229개 (9,973)
+\item up to 100,000: 소수 9,592개 (99,991)
+\item up to 1,000,000: 소수 78,498개 (999,983)
+\item up to 1,000,000,000: 소수 50,847,534개 (999,999,937)
+\item 10,007; 10,009; 10,111; 31,567; 70,001; 1,000,003; 1,000,033; 4,000,037
+\item 99,999,989; 999,999,937; 1,000,000,007; 1,000,000,009; 9,999,999,967
+\item $998244353 = 119 \times 2^{23} + 1$, primitive 3
+\item $985661441 = 235 \times 2^{22} + 1$, primitive 3
+\item $1012924417 = 483 \times 2^{21} + 1$, primitive 5
+\end{itemize}

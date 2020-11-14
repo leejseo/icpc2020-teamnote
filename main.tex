@@ -1,0 +1,64 @@
+\documentclass[10pt,landscape,a4paper]{article}
+\usepackage[legalpaper, landscape, margin=0.5in]{geometry}
+\usepackage{minted}
+\usepackage{xcolor}
+\usepackage{kotex}
+\usepackage{multicol}
+\usepackage{amsmath, amssymb}
+\usepackage{graphics}
+\usepackage{graphicx}
+\newenvironment{cpp}
+  {\VerbatimEnvironment
+   \begin{minted}[frame=lines]{c++}}
+  {\end{minted}}
+
+\title{ \bf \sf \fontsize{80}{80}\selectfont Teamnote of KAIMARU}
+\author{\sf \huge KAIST | 신민철, 이종서, 이채준}
+\date{\sf \Large 2020 ICPC Seoul Regional Contest}
+\begin{document}
+
+\begin{multicols}{2}
+
+
+
+%\tableofcontents
+\maketitle
+
+
+\section{Data Structures}
+\input{DS.tex}
+
+\section{Trees}
+\input{Trees.tex}
+
+\section{Graphs}
+\input{Graphs.tex}
+
+\section{Math}
+\input{Math.tex}
+
+\section{String}
+\input{String.tex}
+
+\section{Geometry}
+\input{Geometry.tex}
+
+\section{Miscellaneous}
+\input{Misc.tex}
+\iffalse
+\subsection{References}
+\begin{cpp}
+/*
+https://github.com/koosaga/olympiad/tree/master/Library
+https://github.com/jh05013/icpc-teamnote/blob/master/main.tex //template
+https://github.com/hongjun7/Competitive-Programming/blob/master/
+https://github.com/ntopia/icpc-teamnote/tree/master/src
+https://github.com/justiceHui/AlgorithmImplement/
+https://github.com/kth-competitive-programming/kactl
+https://zigui.tistory.com/
+https://cp-algorithms.com/dynamic_programming/divide-and-conquer-dp.html
+*/
+\end{cpp}
+\fi
+\end{multicols}
+\end{document} 

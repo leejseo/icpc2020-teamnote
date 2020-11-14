@@ -1,0 +1,130 @@
+\subsection{OSRank} % leejseo
+\begin{minted}{cpp}
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/detail/standard_policies.hpp>
+#include <functional>
+using namespace __gnu_pbds;
+using ordered_set = tree<int, null_type, less<int>,
+  rb_tree_tag, tree_order_statistics_node_update>;
+// for multi-set like osrank,
+// use ordered_set for pair<int, int> with counter global var
+int main(){
+  ordered_set X;
+  for (int i=1; i<10; i+=2) X.insert(i); // 1 3 5 7 9
+  cout << *X.find_by_order(2) << endl; // 5
+  cout << X.order_of_key(6) << endl; // 3
+  cout << X.order_of_key(7) << endl; // 3
+  X.erase(3);
+}
+\end{minted}
+
+\subsection{mt19937 random} % jhnah917
+\begin{minted}{cpp}
+// dependency :
+// how to use mt19937
+
+int rand(mt19937 &rd, int l, int r){
+    // mt19937 rd((unsigned)chrono::steady_clock::now().time_since_epoch().count());
+    // mt19937 rd(0x917917);
+    uniform_int_distribution<int> rnd(l, r);
+    return rnd(rd);
+}
+\end{minted}
+
+\subsection{FastIO} % DeobureoMinkyuParty
+\inputminted{cpp}{src/Misc/fastio.cpp}
+
+\subsection{Mo's} %jhnah917
+\inputminted{cpp}{src/Misc/mo.cpp}
+
+%\subsection{Fast Float}
+%\verb@__builtin_ia32_ldmxcsr(40896);@ disables denormals (which make floats 20x slower near their minimum value).
+\newcommand{\lstinline}{\texttt}
+\subsection{Bit hacks}
+\begin{minted}{cpp}
+int __builtin_clz(int x);// number of leading zero
+int __builtin_ctz(int x);// number of trailing zero
+int __builtin_clzll(long long x);// number of leading zero
+int __builtin_ctzll(long long x);// number of trailing zero
+int __builtin_popcount(int x);// number of 1-bits in x
+int __builtin_popcountll(long long x);// number of 1-bits in x
+
+lsb(n): (n & -n); // last bit (smallest)
+floor(log2(n)): 31 - __builtin_clz(n | 1);
+floor(log2(n)): 63 - __builtin_clzll(n | 1);
+
+// compute next perm. ex) 00111, 01011, 01101, 01110, 10011, 10101..
+long long next_perm(long long v){
+	long long t = v | (v-1);
+	return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
+}
+\end{minted}
+\subsection{Pragmas}
+\begin{itemize}
+	\item \lstinline{\#pragma GCC optimize ("Ofast")} will make GCC auto-vectorize loops and optimizes floating points better.
+	\item \lstinline{\#pragma GCC target ("avx2")} can double performance of vectorized code, but causes crashes on old machines.
+	\item \lstinline{\#pragma GCC optimize ("trapv")} kills the program on integer overflows (but is really slow).
+\end{itemize}
+
+
+\subsection{체계적인 접근을 위한 질문들}
+
+``알고리즘 문제 해결 전략'' 에서 발췌함
+\begin{itemize}
+\item 비슷한 문제를 풀어본 적이 있던가?
+\item 단순한 방법에서 시작할 수 있을까? (brute force)
+\item 내가 문제를 푸는 과정을 수식화할 수 있을까? (예제를 직접 해결해보면서)
+\item 문제를 단순화할 수 없을까?
+\item 그림으로 그려볼 수 있을까?
+\item 수식으로 표현할 수 있을까?
+\item 문제를 분해할 수 있을까?
+\item 뒤에서부터 생각해서 문제를 풀 수 있을까?
+\item 순서를 강제할 수 있을까?
+\item 특정 형태의 답만을 고려할 수 있을까? (정규화)
+\end{itemize}
+
+\subsection{Parallel Binary Search}
+\begin{itemize}
+    \item 이분탐색의 결정 문제를 원소들을 쭉 훑어보면서 해결할 수 있을 때 묶어서 처리
+\end{itemize}
+
+\subsection{DnC Optimization}
+\begin{itemize}
+    \item $DP[i][j] = Min_{k < j}(DP[i-1][k] + C[k][j])$
+    \item $C$ 배열은 Monge array여야 함
+    \item Monge array: 임의의 $a \le b \le c \le d$에 대해 $C[a][c] + C[b][d] \le C[a][d] + C[b][c]$
+    \item Generic Implementation: Even though implementation varies based on problem, here's a fairly generic template. The function compute computes one row \texttt{i} of states \texttt{dp\_cur}, given the previous row \texttt{i−1} of states \texttt{dp\_before}. It has to be called with \texttt{compute(0, n-1, 0, n-1)}.
+    \begin{minted}{cpp}
+int n;
+long long C(int i, int j);
+vector<long long> dp_before(n), dp_cur(n);
+
+// compute dp_cur[l], ... dp_cur[r] (inclusive)
+void compute(int l, int r, int optl, int optr)
+{
+    if (l > r)
+        return;
+    int mid = (l + r) >> 1;
+    pair<long long, int> best = {INF, -1};
+
+    for (int k = optl; k <= min(mid, optr); k++) {
+        best = min(best, {dp_before[k] + C(k, mid), k});
+    }
+
+    dp_cur[mid] = best.first;
+    int opt = best.second;
+
+    compute(l, mid - 1, optl, opt);
+    compute(mid + 1, r, opt, optr);
+}
+    \end{minted}
+\end{itemize}
+
+\subsection{Knuth Optimization}
+\begin{itemize}
+    \item Recurrence: $DP[i][j] = Min_{i \le k < j}(DP[i][k] + DP[k + 1][j] + C[i][j])$
+    \item Condition: $C[i][j]$ is a Monge array, and satisfies $C[a][d]\ge C[b][c]$ for $a \le b\le c\le d$.
+    \item Complexity: $O(n^3) \to O(n^2)$
+    \item $opt[i][j]$를 $DP[i][j]$에서 최솟값을 주는 $k$ (여러 개 있으면 가장 왼쪽) 라고 할 때, $opt[i][j-1] \le opt[i][j] \le opt[i+1][j]$
+\end{itemize}

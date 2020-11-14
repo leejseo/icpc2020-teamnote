@@ -1,0 +1,81 @@
+\subsection{Basic Geometry} %ntopia
+\inputminted{cpp}{src/Geometry/basic.cpp}
+
+\subsection{Convex Hull} %ntopia
+\inputminted{cpp}{src/Geometry/hull.cpp}
+
+\subsection{Rotating Calipers} %ntopia
+\inputminted{cpp}{src/Geometry/rotating.cpp}
+
+\subsection{Point in Polygon Test} %ntopia
+\inputminted{cpp}{src/Geometry/point-in-polygon.cpp}
+
+\subsection{Delaunay Triangulation} %zigui
+\inputminted{cpp}{src/Geometry/delaunay.cpp}
+
+\subsection{Sort By Angle} %koosaga
+\begin{minted}{cpp}
+inline ll ccw(pi p1, pi p2, pi p3){
+    ll tmp = p1.x*p2.y + p2.x*p3.y + p3.x*p1.y;
+    tmp -= p1.y*p2.x + p2.y*p3.x + p3.y*p1.x;
+    if (tmp > 0) return 1;
+    if (tmp < 0) return -1;
+    return 0;
+}
+
+inline ll hypot(pi p){
+    return p.x*p.x + p.y*p.y;
+}
+
+inline int cmp(const pi &a, const pi &b){
+    if ((a > pi(0, 0)) ^ (b > pi(0, 0))) return a > b;
+    if (ccw(a, pi(0, 0), b) != 0) return ccw(a, pi(0, 0), b) > 0;
+    return hypot(a) < hypot(b);
+}
+\end{minted}
+\subsection{Half-Plane Intersection}
+\begin{minted}{cpp}
+const double eps = 1e-8;
+typedef pair<long double, long double> pi;
+bool z(long double x){ return fabs(x) < eps; }
+struct line{
+	long double a, b, c;
+	bool operator<(const line &l)const{
+		bool flag1 = pi(a, b) > pi(0, 0);
+		bool flag2 = pi(l.a, l.b) > pi(0, 0);
+		if(flag1 != flag2) return flag1 > flag2;
+		long double t = ccw(pi(0, 0), pi(a, b), pi(l.a, l.b));
+		return z(t) ? c * hypot(l.a, l.b) < l.c * hypot(a, b) : t > 0;
+	}
+	pi slope(){ return pi(a, b); }
+};
+pi cross(line a, line b){
+	long double det = a.a * b.b - b.a * a.b;
+	return pi((a.c * b.b - a.b * b.c) / det, (a.a * b.c - a.c * b.a) / det);
+}
+bool bad(line a, line b, line c){
+	if(ccw(pi(0, 0), a.slope(), b.slope()) <= 0) return false;
+	pi crs = cross(a, b);
+	return crs.first * c.a + crs.second * c.b >= c.c;
+}
+bool solve(vector<line> v, vector<pi> &solution){ // ax + by <= c;
+	sort(v.begin(), v.end());
+	deque<line> dq;
+	for(auto &i : v){
+		if(!dq.empty() && z(ccw(pi(0, 0), dq.back().slope(), i.slope()))) continue;
+		while(dq.size() >= 2 && bad(dq[dq.size()-2], dq.back(), i)) dq.pop_back();
+		while(dq.size() >= 2 && bad(i, dq[0], dq[1])) dq.pop_front();
+		dq.push_back(i);
+	}
+	while(dq.size() > 2 && bad(dq[dq.size()-2], dq.back(), dq[0])) dq.pop_back();
+	while(dq.size() > 2 && bad(dq.back(), dq[0], dq[1])) dq.pop_front();
+	vector<pi> tmp;
+	for(int i=0; i<dq.size(); i++){
+		line cur = dq[i], nxt = dq[(i+1)%dq.size()];
+		if(ccw(pi(0, 0), cur.slope(), nxt.slope()) <= eps) return false;
+		tmp.push_back(cross(cur, nxt));
+	}
+	solution = tmp;
+	return true;
+}
+\end{minted}
